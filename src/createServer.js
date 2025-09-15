@@ -5,6 +5,7 @@ const cors = require('cors');
 const { User } = require('./models/User.model');
 const { Expense } = require('./models/Expense.model');
 const { Op } = require('sequelize');
+const { Category } = require('./models/Category.model');
 
 function createServer() {
   const app = express();
@@ -183,6 +184,78 @@ function createServer() {
 
     res.send(currentExpense);
   });
+
+  app.get('/categories', async (req, res) => {
+    const result = await Category.findAll();
+
+    res.send(result);
+  });
+
+  app.get('/categories/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (isNaN(+id)) {
+      return res.sendStatus(400);
+    }
+
+    const result = await Category.findByPk(id);
+
+    if (!result) {
+      return res.sendStatus(404);
+    }
+
+    res.send(result);
+  });
+
+  app.post('/categories', async (req, res) => {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.sendStatus(400);
+    }
+
+    const newUser = await Category.create({ name });
+
+    res.status(201).json(newUser);
+  });
+
+  app.delete('/categories/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!(await Category.findByPk(id))) {
+      return res.sendStatus(404);
+    }
+
+    await Category.destroy({
+      where: {
+        id: id,
+      },
+    });
+
+    res.sendStatus(204);
+  });
+
+  app.patch('/categories/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    if (typeof name !== 'string') {
+      return res.sendStatus(422);
+    }
+
+    const [updatedCount] = await Category.update({ name }, { where: { id } });
+
+    if (updatedCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    const updatedUser = await Category.findByPk(id);
+
+    res.send(updatedUser);
+  });
+
+  //   app.use('/users', userRouter);
+  // app.use('/expenses', expensesRouter);
 
   return app;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use strict';
 
 const { Sequelize } = require('sequelize');
@@ -27,6 +28,7 @@ const sequelize = new Sequelize({
   dialect: 'postgres',
   port: POSTGRES_PORT || 5432,
   password: POSTGRES_PASSWORD || '12341234',
+  logging: console.log,
 });
 
 module.exports = {
