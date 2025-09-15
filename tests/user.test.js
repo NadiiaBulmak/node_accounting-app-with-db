@@ -44,6 +44,12 @@ describe('User', () => {
     });
 
     await User.destroy({ truncate: true });
+    // await User.destroy({
+    //   where: {},
+    //   truncate: true,
+    //   cascade: true,
+    //   restartIdentity: true,
+    // });
   });
 
   afterEach(async () => {
