@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const { ExpensesServise } = require('./../services/expenses.servise');
+const { UsersService } = require('../services/users.service');
 
 const getExpenses = async (req, res) => {
   const { userId, from, to, categories } = req.query;
@@ -41,12 +42,16 @@ const getExpenseById = async (req, res) => {
 const postExpense = async (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const userExist = await ExpensesServise.getOne(userId);
+  const userExist = await UsersService.getOne(userId);
 
   if (!userExist) {
     res.sendStatus(400);
 
     return;
+  }
+
+  if (!title || !amount || !spentAt) {
+    return res.sendStatus(400);
   }
 
   const data = {
@@ -95,7 +100,7 @@ const updateExpense = async (req, res) => {
     return res.sendStatus(404);
   }
 
-  const currentExpense = await ExpensesServise.getOne;
+  const currentExpense = await ExpensesServise.getOne(id);
 
   res.send(currentExpense);
 };

@@ -37,12 +37,13 @@ const postUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 
-  if (!UsersService.getOne(id)) {
+  const user = await UsersService.getOne(id);
+
+  if (!user) {
     return res.sendStatus(404);
   }
 
-  await UsersService.deleteOne();
-
+  await UsersService.deleteOne(id);
   res.sendStatus(204);
 };
 

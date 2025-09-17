@@ -19,13 +19,11 @@ const postOne = async (name) => {
 };
 
 const deleteOne = async (id) => {
-  const result = await User.destroy({
+  await User.destroy({
     where: {
       id: id,
     },
   });
-
-  return result;
 };
 
 const updateOne = async (name, id) => {
@@ -35,7 +33,7 @@ const updateOne = async (name, id) => {
 };
 
 module.exports = {
-  UsersServise: {
+  UsersService: {
     getAll,
     getOne,
     postOne,
